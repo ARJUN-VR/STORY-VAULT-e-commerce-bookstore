@@ -1,0 +1,70 @@
+<%-include('../layouts/admin-layout.ejs')%>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="table-responsive">
+      <table class="table">
+        <thead class="thead">
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Edit</th>
+            <th>Status</th> <!-- Added status column -->
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <% udata.forEach((item, index) => { %>
+          <tr>
+            <td><%= item.name %></td>
+            <td><%= item.email %></td>
+            <td><%= item.phone %></td>
+            <td><%= item.address %></td>
+            <td>
+              <form action="/admin/block" method="post">
+                <input type="hidden" name="email" value="<%= item.email %>">
+                <button type="submit" class="block-button" id="block-button-<%= index %>"
+                  onclick="toggleBlock(<%= index %>)">Block/Unblock</button>
+              </form>
+            </td>
+            <td id="status-<%= index %>">
+              <% if (item.blocked) { %>
+                Blocked
+              <% } else { %>
+                Unblocked
+              <% } %>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+
+<script>
+  function toggleBlock(index) {
+    var button = document.getElementById('block-button-' + index);
+    var emailInput = button.previousElementSibling.querySelector('[name="email"]');
+    var statusCell = document.getElementById('status-' + index);
+
+    console.log(emailInput.value); // Retrieve the email value for the clicked button
+
+    if (button.textContent === 'Block') {
+      button.textContent = 'Unblock';
+      button.style.backgroundColor = 'green';
+      button.style.color = 'white';
+      statusCell.textContent = 'Blocked';
+    } else {
+      button.textContent = 'Block';
+      button.style.backgroundColor = 'yellow';
+      button.style.color = 'black';
+      statusCell.textContent = 'Unblocked';
+    }
+  }
+</script>
