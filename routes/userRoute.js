@@ -1,21 +1,24 @@
 const express = require("express");
 const userRoute = express();
-// const jwt=require('jsonwebtoken')
+
 const session = require("express-session");
 
-// const twilio=require('twilio')
-// const { accountSid, authToken } = require('../config');
-// const client = twilio(accountSid, authToken);
-// const crypto=require('crypto')
-// const jwtSecretKey = crypto.randomBytes(32).toString('hex');
+
+
+const crypto=require('crypto')
+
 
 userRoute.use(
   session({
-    secret: "mysessionsecretkey",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
+
+    
   })
 );
+
+
 const auth = require('../middlewares/auth')
 
 userRoute.use(express.json());
@@ -28,19 +31,23 @@ userRoute.set("view engine", "ejs");
 userRoute.set("views", "./views/user");
 
 const userController = require("../controller/userController");
+const cartController=require('../controller/cartController')
+const orderController=require('../controller/orderController');
+const addressController=require('../controller/addressController')
 
-userRoute.get("/", userController.loadLogin);
+
+userRoute.get("/login", userController.loadLogin);
 
 userRoute.get("/register", userController.loadRegister);
 userRoute.post("/register", userController.insertUser);
 
 userRoute.post("/login", userController.verify);
-userRoute.get('/home',auth.login,userController.loadHome)
+userRoute.get('/',userController.loadHome)
 
-userRoute.get('/cart',auth.login,userController.loadCart)
+// userRoute.get('/cart',auth.login,userController.loadCart)
 
 userRoute.get("/otp", userController.loadOtp);
-userRoute.post("/sendOtp", userController.phoneVerify);
+// userRoute.post("/sendOtp", userController.phoneVerify);
 
 userRoute.post("/forgot-sendOtp", userController.forgotPhoneVerify);
 
@@ -63,7 +70,6 @@ userRoute.get("/forgot-password", userController.forgotPassword);
 
 //     req.session.otp=otp
 
-// const token=jwt.sign({otp},jwtSecretKey,{expiresIn:'1m'})
 
 // client.messages.create({
 //     body:`your OTP is ${otp} `,
@@ -95,4 +101,63 @@ userRoute.get('/logout',userController.Logout)
 //   res.redirect('/')
 // })
 
+userRoute.get('/single-product',userController.loadsingleproduct)
+
+userRoute.get('/category-products',userController.productsbycategory)
+
+userRoute.get('/get-cart',auth.login,cartController.loadCart)
+userRoute.post('/add-cart/:id',auth.login,cartController.addCart)
+
+userRoute.post('/update-quantity/:id',cartController.updatecart)
+
+userRoute.get('/checkout:id',cartController.loadCheckout)
+userRoute.get('/checkout',cartController.loadCheckout)
+
+
+userRoute.post('/place-order',orderController.addOrder)
+
+userRoute.get('/remove:id',cartController.remove)
+
+userRoute.get('/orderlist',auth.login,orderController.loadOrder)
+
+userRoute.post('/address',addressController.addAddress)
+
+userRoute.get('/deleteAddress:id',addressController.deleteAddress)
+
+userRoute.post('/order-cancel',orderController.cancelOrder)
+userRoute.get('/order-return',orderController.returnOrder)
+
+userRoute.post('/paypal',orderController.payment)
+
+userRoute.get('/success',orderController.handlePayment)
+
+userRoute.get('/cancel',(req,res)=>{
+    res.send('failed');
+})
+
+userRoute.get('/order-success',orderController.orderSuccess)
+
+userRoute.get('/profile',userController.loadProfile)
+
+userRoute.get('/order-detail',orderController.successpageforindividualproduct)
+
+userRoute.post('/coupon-discount',cartController.coupon)
+
+// userRoute.post('/Cancel-reason',userController)
+
+//add reasons for the cancellations
+
+
+
 module.exports = userRoute;
+
+
+
+
+
+
+
+//4.add image cropp
+//5.image zoom
+//6.stock management
+//7.clean-up the template

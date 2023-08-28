@@ -1,0 +1,77 @@
+<%- include('../layouts/admin-layout.ejs') %>
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Sales Report</h2>
+            <p>Lorem ipsum dolor sit amet.</p>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <form action="/admin/loadSales" method="GET"> 
+                <div class="row gx-3 align-items-center">
+                    <div class="col">
+                        <label for="start-date">From:</label>
+                        <input type="date" id="start-date" name="startDate" class="form-control">
+                    </div>
+                    <div class="col">
+                        <label for="end-date">To:</label>
+                        <input type="date" id="end-date" name="endDate" class="form-control">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Search</button>
+                    </div>
+                </div>
+            </form>
+        </header>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th scope="col">Product ID</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% data.forEach((item) => { %>
+                            <tr>
+                                <td><%= item.users[0].name %></td>
+                                <td><%= item.orderdetails.carted._id %></td>
+                                <td><%= item.orderdetails.quantity %></td>
+                                <td><%= item.orderdetails.quantity * item.orderdetails.carted.price %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div> 
+        </div>
+        <div class="col-auto">
+            <button id="generatePdfButton" class="btn btn-primary">Generate PDF</button>
+        </div>
+    </div>
+</section>
+
+<%- include('../layouts/adminfooter.ejs') %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script>
+    $(document).ready(function ($) {
+        $(document).on('click', '#generatePdfButton', function (event) {
+            event.preventDefault();
+            var element = document.querySelector('.table-responsive'); // Change this selector
+            let randomNumber = Math.floor(Math.random() * (10000000000 - 1)) + 1;
+            var opt = {
+                margin: 0,
+                filename: 'SalesReport' + randomNumber + '.pdf',
+                html2canvas: { scale: 10 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+    
+            html2pdf().set(opt).from(element).save();
+        });
+    });
+    </script>

@@ -1,0 +1,142 @@
+<%-include('../layouts/header.ejs')%>
+
+	<!-- Start Banner Area -->
+	<section class="">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end ">
+				<div class="col-first mt-5">
+					<h1><%=data[0].category%></h1>
+					<nav class="d-flex align-items-center">
+						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
+						<a href="category.html">Fashon Category</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+	<div class="container">
+		<div class="row">
+			<div class="col-xl-3 col-lg-4 col-md-5" style="background-color: rgb(90, 81, 81);">
+				<div class="sidebar-categories">
+                    
+					
+					<ul class="main-categories">
+					
+					</ul>
+				</div>
+				<div class="sidebar-filter mt-50">
+					
+					<div class="common-filter">
+                        <div class="head">Sort</div>
+						<form id="sortForm" method="get" action="/category-products">
+                        <ul>
+                            <li><input type="radio" name="sort" value="LtoH">Low To High</li>
+                            <li><input type="radio" name="sort" value="HtoL">High To Low</li>
+                        </ul>
+					   </form>
+						
+				
+					</div>
+					<script>
+						const sort=document.getElementById('sortForm')
+
+						sort.addEventListener('change',function(){
+							this.submit()
+						})
+					</script>
+			
+					<div class="common-filter">
+						<div class="head">Price</div>
+						<div class="price-range-area">
+							<div id="price-range"></div>
+							<div class="value-wrapper d-flex">
+								<div class="price">Price:</div>
+								<span>$</span>
+								<div id="lower-value"></div>
+								<div class="to">to</div>
+								<span>$</span>
+								<div id="upper-value"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-9 col-lg-8 col-md-7">
+				<!-- Start Filter Bar -->
+			
+				<!-- End Filter Bar -->
+				<!-- Start Best Seller -->
+				<section class="lattest-product-area pb-40 category-list">
+					<div class="row">
+                        <% data.forEach(product => { %>
+                           
+                            <% if (product.is_listed === false) { %>
+						<!-- single product -->
+                        
+						<div class="col-lg-2 col-md-6 ml-5">
+							<div class="single-product ">
+								<a href="/single-product?id=<%= product.id %>"><img class="img-fluid" src="img/product/<%=product.Image[0] %>" alt=""></a>
+								<div class="product-details">
+									<a href="/single-product?id=<%= product.id %>"><h6><%=product.name %></h6></a>
+									<div class="price">
+										<h6>₹<%= product.price %></h6>
+
+									</div>
+								</div>
+							</div>
+						</div>
+                        <% } %>
+                        <% }) %>
+						<!-- single product -->
+				</section>
+				<!-- End Best Seller -->
+				<!-- Start Filter Bar -->
+				<div class="filter-bar d-flex flex-wrap align-items-center">
+					<div class="sorting mr-auto">
+						<select>
+							<option value="1">Show 12</option>
+							<option value="1">Show 12</option>
+							<option value="1">Show 12</option>
+						</select>
+					</div>
+					<!-- category-products.ejs -->
+
+<!-- Render products -->
+<div class="product-list">
+	<% for (let product of data) { %>
+	  <!-- Display product details here -->
+	<% } %>
+  </div>
+  
+  <!-- Pagination links -->
+<!-- Pagination links -->
+<div class="pagination">
+	<% if (totalPages > 1) { %>
+	  <% if (currentPage > 1) { %>
+		<a href="?page=1&category=<%= data[0].category %>">First</a>
+		<a href="?page=<%= currentPage - 1 %>&category=<%= data[0].category %>">Previous</a>
+	  <% } %>
+  
+	  <% for (let page = 1; page <= totalPages; page++) { %>
+		<a href="?page=<%= page %>&category=<%= data[0].category %>" <%= page === currentPage ? 'class="active"' : '' %>><%= page %></a>
+	  <% } %>
+  
+	  <% if (currentPage < totalPages) { %>
+		<a href="?page=<%= currentPage + 1 %>&category=<%= data[0].category %>">Next</a>
+		<a href="?page=<%= totalPages %>&category=<%= data[0].category %>">Last</a>
+	  <% } %>
+	<% } %>
+  </div>
+  
+				</div>
+					
+				<!-- End Filter Bar -->
+			</div>
+		</div>
+	</div>
+ 
+
+
+<%-include('../layouts/footer.ejs')%>

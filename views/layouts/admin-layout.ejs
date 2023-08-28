@@ -21,20 +21,20 @@
     />
     <!-- Template CSS -->
     <link href="../ad-assets/css/main.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css" />
     
     
-  
+    
+  </head>
 
   <body>
-    <div class="screen-overlay"></div>
+    <div class=""></div>
     <aside class="navbar-aside" id="offcanvas_aside">
       <div class="aside-top">
-        <a href="index.html" class="brand-wrap">
-          <img
-            src="../ad-assets/imgs/theme/logo.svg"
-            class="logo"
-            alt="Evara Dashboard"
-          />
+        <a href="/admin/home" class="brand-wrap">
+         <h5>-STORY VAULT-</h5>
         </a>
         <div>
           <button class="btn btn-icon btn-aside-minimize">
@@ -44,13 +44,13 @@
       </div>
       <nav>
         <ul class="menu-aside">
-          <li class="menu-item active">
-            <a class="menu-link" href="index.html">
+          <li class="menu-item">
+            <a class="menu-link" href="/admin/home">
               <i class="icon material-icons md-home"></i>
               <span class="text">Dashboard</span>
             </a>
           </li>
-          <li class="menu-item has-submenu">
+          <li class="menu-item">
             <a class="menu-link" href="/admin/users">
               <i class="icon material-icons md-shopping_cart"></i>
               <span class="text">Users</span>
@@ -59,12 +59,17 @@
           </li>
           
           <li class="menu-item has-submenu">
-            <a class="menu-link" href="/admin/product">
-              <i class="icon material-icons md-shopping_bag"></i>
-              <span class="text">Products</span>
+            <a class="menu-link" href="/admin/product"> <i class="icon material-icons md-shopping_bag"></i>
+                <span class="text">Products</span>
+                
             </a>
-            
-          </li>
+            <div class="submenu">
+                <a href="/admin/product" class="active">Product List</a>
+                <a href="/admin/catogory">Categories</a>
+                <a href="/admin/order" class="active">Order List</a>
+
+            </div>
+        </li>
          
           <li class="menu-item has-submenu">
             <a class="menu-link" href="page-sellers-cards.html">
@@ -99,7 +104,7 @@
               <a href="page-transactions-2.html">Transaction 2</a>
             </div>
           </li>
-          <li class="menu-item has-submenu">
+          <!-- <li class="menu-item has-submenu">
             <a class="menu-link" href="#">
               <i class="icon material-icons md-person"></i>
               <span class="text">Account</span>
@@ -109,6 +114,12 @@
               <a href="page-account-register.html">User registration</a>
               <a href="page-error-404.html">Error 404</a>
             </div>
+          </li> -->
+          <li class="menu-item">
+            <a class="menu-link" href="LoadBanner">
+              <i class="icon material-icons md-star"></i>
+              <span class="text">Banners</span>
+            </a>
           </li>
           <li class="menu-item">
             <a class="menu-link" href="page-reviews.html">
@@ -117,15 +128,15 @@
             </a>
           </li>
           <li class="menu-item">
-            <a class="menu-link" href="page-brands.html">
+            <a class="menu-link" href="/admin/coupon">
               <i class="icon material-icons md-stars"></i>
-              <span class="text">Brands</span>
+              <span class="text">Coupon</span>
             </a>
           </li>
           <li class="menu-item">
-            <a class="menu-link" disabled href="#">
+            <a class="menu-link"  href="/admin/LoadSales">
               <i class="icon material-icons md-pie_chart"></i>
-              <span class="text">Statistics</span>
+              <span class="text">Sales report</span>
             </a>
           </li>
         </ul>
@@ -273,7 +284,7 @@
                     ><i class="material-icons md-help_outline"></i>Help center</a
                   >
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item text-danger" href="#"
+                  <a class="dropdown-item text-danger" href="/admin/logout"
                     ><i class="material-icons md-exit_to_app"></i>Logout</a
                   >
                 </div>

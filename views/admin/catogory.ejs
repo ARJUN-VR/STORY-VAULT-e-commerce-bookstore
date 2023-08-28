@@ -1,0 +1,142 @@
+<%-include('../layouts/admin-layout.ejs')%>
+
+<section class="content-main">
+  <div class="container">
+    <div class="card gradient-card">
+      <div class="card-body">
+    <h3>Category Form</h3>
+    <br />
+    <form method="post" action="/admin/addCategory">
+      <div class="form-group">
+        <style>
+          /* Style for the input field */
+          .form-control {
+            border: 2px solid #353434; /* Border color and width */
+            border-radius: 4px; /* Border corner radius */
+            padding: 8px 12px; /* Adjust padding as needed */
+          }
+        
+          /* Style for the input field when it's focused (optional) */
+          .form-control:focus {
+            outline: none; /* Remove default focus outline */
+            border-color: #090909; /* Change border color on focus */
+            box-shadow: 0 0 5px #0d0d0d; /* Add a slight shadow on focus */
+          }
+        </style>
+        
+        <input
+          type="text"
+          class="form-control"
+          id="exampleInputEmail1"
+          name="name"
+          aria-describedby="emailHelp"
+          placeholder="Enter Category Name"
+          pattern="^(?!.*\d)[^\s]+$"
+          required
+        />
+        <br />
+      </div>
+      
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          id="exampleInputPassword1"
+          name="description"
+          placeholder="Enter Category Description"
+          pattern="^(?!.*\d)[^\s]+$"
+          required
+        />
+      </div>
+      <br />
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <div>
+        <p><%=(typeof message!=='undefined')?message:""%></p>
+      </div>
+    </form>
+      </div>
+    </div>
+  </div>
+  <!-- <style>
+ .gradient-card {
+    background: linear-gradient(to bottom right, #f9f9fb, #f4f5f6);
+    border-radius: 10px;
+    box-shadow:
+      0 2px 5px rgba(0, 0, 0, 1), /* Main shadow - gives depth */
+      0 0 0 6px #ffffff, /* Highlight - simulates light source */
+      0 0 10px rgba(0, 0, 0, 0.5) inset; /* Inner shadow - adds more depth */
+  }
+  </style> -->
+  
+    <br />
+
+       <!-- --------------DISPLAY CATEGORY----------------- -->
+  
+  
+  
+       <div class="card mb-4">
+              
+                
+        <div class="card-body">
+            <div class="table-responsive">
+                <div class="table-responsive">
+                    <table class="table align-middle table-nowrap mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                
+                                <th class="align-middle" scope="col">Category</th>
+                                <th class="align-middle" scope="col">Description</th>
+                                <th class="align-middle" scope="col">Action</th>
+                                <th class="align-middle" scope="col">Status</th>
+                             
+                               
+                  
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% data.forEach(category => { %>
+                            <tr>
+                         
+                                
+                                <td><%= category.name %></td>
+                                <td>
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="<%=category.description%>" style="display: inline-block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                      <%=category.description%>
+                                    </span>
+                                  </td>
+                               
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                          <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                          <% if(category.is_listed==1){%>
+                                          <a class="dropdown-item" href="/admin/list?id=<%=category._id %>"
+                                            ><i class="bx bx-edit-alt me-1"></i> List</a
+                                          >
+                                          <% } else { %>
+                                          <a class="dropdown-item" href="/admin/list?id=<%=category._id %>"
+                                            ><i class="bx bx-trash me-1"></i> Unlist</a
+                                          >    
+                                          <% } %>
+                                          <a class="dropdown-item" href="/admin/EditCategory?id=<%=category._id %>"
+                                            ><i class="bx bx-trash me-1"></i> Edit</a
+                                          > 
+                                                     
+                                        </div>
+                                      </div>
+                                  </td>
+                                  <td><%= category.is_listed %></td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div> <!-- table-responsive end// -->
+      </div>
+    </div>
+  </div>
+</section>
+<%-include('../layouts/adminfooter.ejs')%>

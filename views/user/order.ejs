@@ -1,0 +1,170 @@
+<%-include('../layouts/header.ejs') %>
+
+<br><br><br><br><br>
+
+
+<% if (data == null || data == 0) { %>
+  <div class="container d-flex justify-content-center align-items-center" style="width: 100%; height: 50%;">
+    <img src="https://img.freepik.com/free-icon/cart_318-150480.jpg" alt="YOU HAVE NO ORDER!" style="height: 50%;">
+  </div>
+<% } else { %>
+<section class="cart_area">
+    <div class="container">
+        <% data.forEach(product => { %>
+          
+        <div class="card w-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <a href="/order-detail?productId=<%= product._id %>">
+              <div>
+                <img src="img/product/<%=product.orderdetails.carted.Image[0]%>" alt="image" style="width: auto; height: 107px;">
+              </div>
+            </a>
+              <div>
+                <span style="color: black;"><%= product.orderdetails.date.toLocaleString() %></span>
+
+              </div>
+              <div>
+                <% if (product.orderdetails.status === 'placed') { %>
+                  <h4><span class="badge badge-success">Placed</span></h4>
+                  <% } else if (product.orderdetails.status === 'cancel requested') { %>
+                    <h4><span class="badge badge-info">cancel requested</span></h4>
+                <% } else if (product.orderdetails.status === 'cancelled') { %>
+                  <h4><span class="badge badge-danger">Canceled</span></h4>
+                <% } else if (product.orderdetails.status === 'requested') { %>
+                  <h4><span class="badge badge-warning">Requested</span></h4>
+                <% } else if (product.orderdetails.status === 'accepted') { %>
+                 <h4> <span class="badge badge-dark">Return accepted</span></h4>
+                <% } else if (product.orderdetails.status === 'dispatched') { %>
+                  <h4> <span class="badge badge-secondary">Dispatched</span></h4>
+                <% } else if (product.orderdetails.status === 'delivered') { %>
+                    <h4> <span class="badge badge-info">Delivered</span></h4>
+                    <% } else if (product.orderdetails.status === 'cancel declined') { %>
+                      <h4> <span class="badge badge-danger">cancel declined</span></h4>
+                      
+                <% } else if (product.orderdetails.status === 'declined') { %>
+                    <h4><span class="badge badge-dark">Return  Declined</span></h4>
+                <% } %>
+                
+              </div>
+              <% if (product.orderdetails.status === 'placed') { %>
+              <div>
+                <button class="btn btn-danger m-2" id="cancel" >Cancel</button>
+                
+                                 <!-- view modal -->
+
+
+                                 <div class="modal fade" id="viewmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Order Cancel</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <form action="/order-cancel?productId=<%=product.orderdetails.carted._id%>" method="post">
+                                           <div>
+                                            <input type="text" style="border-color: #fff;width: 100%; border-width: 0;" placeholder="Enter the reason" name="reason">
+                                           </div>
+                                           <style>
+                                            input:focus{
+                                              outline: none;
+                                            }
+                                           </style>
+                                            <div class="d-flex justify-content-end mt-2">
+                                              <button type="submit" class="btn btn-info">submit</button>
+
+                                            </div>
+                                          </form>
+                                       
+                                        <br>
+                                       
+                                      </a>
+                                      </div>
+                                     
+                                    </div>
+                                  </div>
+                                </div>
+
+     
+                <% } else if (product.orderdetails.status === 'delivered') { %>
+                  <div id="return-btn-container">
+                    <a id="re-btn" href="/order-return?productId=<%= product.orderdetails.carted._id %>" class="btn btn-outline-danger m-2">Return</a>
+                  </div>
+                  <script>
+                    setTimeout(function(){
+                      var returnbtn = document.getElementById('re-btn');
+                      returnbtn.style.display = 'none';
+                    }, 14*24*60*60*1000);
+                  </script>
+                <% } %>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+  <% } %>
+
+  <script>
+    document.getElementById("cancel").addEventListener("click", function(event) {
+       event.preventDefault();
+       $('#viewmodal').modal('show');
+     });
+ </script>
+ 
+      
+    <style>
+        .product-name{
+            max-width: 50px;
+            
+        }
+
+        /* Apply flex properties to the parent div to maintain alignment */
+.d-flex {
+  display: flex;
+}
+
+/* Styles to make the anchor tags look like buttons */
+a.btn {
+  display: inline-block;
+  text-align: center;
+  padding: 0.375rem 0.75rem;
+  text-decoration: none;
+  color: white;
+  background-color: rgb(107, 31, 31);
+  border: 1px solid red;
+  border-radius: 0.25rem;
+  transition: background-color 0.15s ease-in-out;
+}
+
+a.btn.btn-outline-danger {
+  background-color: transparent;
+  color: red;
+}
+
+a.btn.btn-outline-danger:hover {
+  background-color: red;
+  color: white;
+}
+
+    </style>
+
+
+
+
+
+
+  
+</section>
+
+
+<%-include('../layouts/footer.ejs')%>
+
+
+
+
+
+
+                      

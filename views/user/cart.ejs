@@ -1,15 +1,191 @@
 <%-include('../layouts/header.ejs') %>
- <h1 style="display: flex; justify-content: center; align-items: center; height: 10vh;">#Cart</h1>
- <div class="center-image">
-    <img src="https://i.pinimg.com/originals/4e/e5/ca/4ee5ca990c4a7ec5ff5207719caa2e5c.png" alt="Description of the image">
-  
-  
+
+
+ <!-- Start Banner Area -->
+ <section class="banner-area organic-breadcrumb">
+  <div class="container">
+      <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+          <div class="col-first">
+              <h1>Shopping Cart</h1>
+              <nav class="d-flex align-items-center">
+                  <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                  <a href="category.html">Cart</a>
+              </nav>
+          </div>
+      </div>
   </div>
-      <style>
-        .center-image {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 70vh;
+</section>
+<!-- End Banner Area -->
+
+<!--================Cart Area =================-->
+<% if (data == null || data == 0) { %>
+  <div class="container d-flex justify-content-center align-items-center" style="width: auto; height: 30%;">
+    <h1 style="font-weight: 10; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">You have no items in the cart</h1>
+  </div>
+<% } else { %>
+<section class="cart_area">
+  <div class="container">
+      <div class="cart_inner">
+          <div class="table-responsive">
+              <table class="table">
+                  <thead>
+                      <tr>
+                          <th scope="col">Product</th>
+                          <th scope="col">Price</th>
+                          <th scope="col">Quantity</th>
+                          <th scope="col">Total</th>
+                          <th scope="col">Edit</th>
+
+                          
+                      </tr>
+                  </thead>
+
+                  <% data.forEach(product => { %>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="media">
+                            <div class="d-flex">
+                              <img src="img/product/<%= product.carted.Image[0] %>" alt="" style="height: 30%; width: 30%;">
+                            </div>
+                            <div class="media-body">
+                              <p><%= product.carted.name %></p>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <h5>₹<%= product.carted.price %></h5>
+                        </td>
+                        <td>
+                          <div class="product_count">
+                            <input type="text" name="qty" id="<%= product.carted._id %>" maxlength="12" value="<%= product.quantity %>" title="Quantity:" class="input-text qty">
+                            <button onclick="increaseQuantity('<%= product.carted._id %>',1)" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+                            <button onclick="decreaseQuantity('<%= product.carted._id %>',-1)" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+                          </div>
+                        </td>
+                        <td>
+                          <h5><span id="a-<%= product.carted._id %>">₹<%= product.quantity * product.carted.price %></span></h5>
+
+                        </td>
+                        <td>
+                          <a style="color: red;" href="/remove<%=product.carted._id%>">Remove</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  <% }) %>
+                  
+
+            
+
+
+                      <!-- end of table  -->
+                     
+                   
+                      <tr>
+                          <td>
+
+                          </td>
+                          <td>
+
+                          </td>
+                          <td>
+                              <h5>Subtotal</h5>
+                          </td>
+                          <td>
+                              <h5>₹.<span id="Subtotal"></span></h5>
+                          </td>
+                      </tr>
+                     
+                      <tr class="out_button_area">
+                          <td>
+
+                          </td>
+                          <td>
+
+                          </td>
+                          <td>
+
+                          </td>
+                          <td>
+                              <div class="checkout_btn_inner d-flex align-items-center justify-content-end">
+                                  <a class="primary-btn" href="/checkout">Proceed to checkout</a>
+                              </div>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+  <% } %>
+</section>
+<!--================End Cart Area =================-->
+
+<!-- script for updatequantity -->
+
+<script>
+  function updateQuantity(quantity,productId) {
+    $.ajax({
+      type: "POST",
+      url: "/update-quantity/"+productId, // Point to your Node.js server route
+      data: { quantity: quantity },
+      success: function (response) {
+        if(response.status==true){
+          $("#" + productId).val(quantity);
+          const updatedPriceElement = document.querySelector(`#a-${productId}`)
+          const newprise=response.totalPrice
+          updatedPriceElement.innerHTML ="$"+newprise
+
+
+          // cartTotal making it visible
+          const cartarea = document.querySelector("#Subtotal");
+          const newcarttotal = response.cartTotal;
+          console.log(newcarttotal);
+          cartarea.innerHTML = newcarttotal;
+
+
+          
+          console.log("Quantity updated successfully!");
+
         }
-      </style>
+        // Handle the response from the server (if needed)
+      
+        },
+        error: function (xhr, status, error) {
+          // Handle errors (if any)
+          console.error("Error updating quantity:", error);
+        }
+      });
+    }
+  
+    function increaseQuantity(productId) {
+        
+      var quantityInput = $(`#${productId}`);
+      var newQuantity = parseInt(quantityInput.val()) + 1;
+      quantityInput.val(newQuantity);
+      updateQuantity(newQuantity,productId);
+    }
+  
+    function decreaseQuantity(productId) {
+     
+      var quantityInput = $(`#${productId}`);
+      var newQuantity = parseInt(quantityInput.val()) - 1;
+      if (newQuantity >= 0) {
+        quantityInput.val(newQuantity);
+        updateQuantity(newQuantity,productId);
+      }
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+<%-include('../layouts/footer.ejs')%>

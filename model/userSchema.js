@@ -9,10 +9,8 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  address: {
-    type: String,
-    required: true,
-  },
+  address:[],
+
   phone: {
     type:Number,
     required: true,
@@ -21,9 +19,14 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  wallet:{
+    type:Number
+    },
   is_blocked:{
-    type:Number,
+    type:Boolean,
     required:false,
   }
 });
+
+
 module.exports = mongoose.model("User", userSchema);

@@ -1,0 +1,98 @@
+<%-include('../layouts/admin-layout.ejs')%>
+
+<section class="content-main">
+  <div class="container">
+    <h3>product Edit Form</h3>
+    <br>
+    <form method="post" action="/admin/updateProduct" >
+        <% data.forEach(product => { %>
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          id="exampleInputEmail1"
+          name="name"
+          aria-describedby="emailHelp"
+          placeholder="Enter Name"
+          pattern="^(?=.*[a-zA-Z])(?!.*\d).+$"
+          required
+          value="<%= product.name %>"
+        >
+        <br>
+      </div>
+      <input type="hidden" name="Id" value="<%= product._id %>"> 
+      <div class="form-group">
+
+        <label for="dropdownInput">Select Category:</label>
+
+
+        <select class="form-control" id="dropdownInput" name="Category">
+
+          <option value=""><%= product.category %></option>
+        <% category.forEach(items => { %>
+          <option value="<%= items.name %>"><%= items.name %></option>
+      <% }) %>
+
+          
+        </select>
+
+      </div>
+
+      
+
+      <div class="form-group">
+        <input
+          type="file"
+          class="form-control"
+          id="files"
+          name="Image"
+          accept="image/*"
+          multiple
+          required
+        />
+      </div>
+      
+      
+      
+      
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          id="exampleInputPassword1"
+          name="description"
+          placeholder="Enter Description"
+          pattern="^(?=.*[a-zA-Z])(?!.*\d).+$"
+    required
+    value="<%= product.description %>"
+         
+        />
+      </div>
+
+      <div class="form-group">
+        <input
+          type="number"
+          class="form-control"
+          id="exampleInputPassword1"
+          name="price"
+          placeholder="Enter price"
+          value="<%= product.price %>"
+        
+        />
+      </div>
+      
+      <br />
+      <% }) %>
+
+
+      <button type="submit" class="btn btn-primary">Confirm Edit</button>
+       
+    </form>
+    <p style="color: red;"><%=(typeof message!=='undefined')?message:""%></p>
+    <script>
+      setTimeout(function(){
+        document.querySelector("p").innerHTML="";
+      },3000)
+    </script>
+    <br >
+    <%-include('../layouts/adminfooter.ejs')%>

@@ -1,13 +1,16 @@
+require("dotenv").config();
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27017/practise");
+mongoose.connect(process.env.MONGODB_URI);
+const nocache = require("nocache");
 
-const path=require('path')
-
-
+const path = require("path");
+const port = process.env.PORT || 3000;
 
 const express = require("express");
+
 const app = express();
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(nocache());
+app.use(express.static(path.join(__dirname, "public")));
 
 app.set("view engine", "ejs");
 
@@ -17,6 +20,6 @@ const adminRoute = require("./routes/adminRoute");
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
 
-app.listen(3000, () => {
-  console.log("http://localhost:3000");
+app.listen(port, () => {
+  console.log(`http://localhost:${port}`);
 });

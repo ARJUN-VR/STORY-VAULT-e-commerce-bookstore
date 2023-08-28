@@ -1,5 +1,14 @@
 const User = require("../model/userSchema");
 const bcrypt = require("bcrypt");
+const Product = require("../model/productSchema");
+const Banner = require('../model/bannerSchema');
+const twilio=require('twilio')
+const { accountSid, authToken,serviceSid } = process.env
+console.log(accountSid);
+console.log(authToken);
+console.log(serviceSid)
+const client = new twilio(accountSid, authToken);
+
 
 const securePassword = async (password) => {
   try {
@@ -20,7 +29,10 @@ const loadRegister = async (req, res) => {
 
 const loadLogin = async (req, res) => {
   try {
-    res.render("login");
+    const userid = req.session.userid;
+    const userdata = await User.findOne({ _id: userid });
+    
+    res.render("login", { userdata });
   } catch (error) {
     console.log(error);
   }
@@ -32,16 +44,26 @@ const insertUser = async (req, res) => {
     const user = new User({
       name: req.body.name,
       email: req.body.email,
-      address: req.body.address,
       phone: "+91" + req.body.no,
       password: spassword,
+      wallet:300,
       is_blocked: 0,
     });
-    const userdata = await user.save();
-    if (userdata) {
-      res.render("registration", { message: "registration success" });
+
+    const checkuser = user.email;
+    const sameUser = await User.findOne({ email: checkuser });
+    if (sameUser) {
+      console.log('user exist');
+      return res.redirect('/login')
     } else {
-      res.render("registration", { message: "registration failed" });
+      console.log("no same user");
+    }
+    const userdata = await user.save();
+    console.log(userdata);
+    if (userdata) {
+      res.redirect('/login')
+    } else {
+      res.redirect('/login')
     }
   } catch (error) {
     console.log(error);
@@ -57,10 +79,8 @@ const verify = async (req, res) => {
     if (userdata) {
       const passwordMatch = await bcrypt.compare(password, userdata.password);
       if (passwordMatch) {
-        req.session.userEmail = userdata.email;
-        req.session.userisblocked=userdata.is_blocked
-
-        res.redirect("/home");
+        req.session.userid = userdata._id;
+        res.redirect("/");
       } else {
         res.render("login", { message: "incorrect password" });
       }
@@ -81,7 +101,15 @@ const loadOtp = async (req, res) => {
 
 const loadHome = async (req, res) => {
   try {
-    res.render("home");
+    
+    const data = await Product.find();
+    const userid = req.session.userid;
+    const userdata = await User.findOne({ _id: userid });
+    const banner=await Banner.find()
+
+ 
+
+    res.render("home", { data, userdata,banner });
   } catch (error) {
     console.log(error);
   }
@@ -92,19 +120,19 @@ const phoneVerify = async (req, res) => {
     const userPhone = await User.findOne({ phone: phone });
 
     if (userPhone) {
-      req.session.phone=phone
+      req.session.phone = phone;
       const otp = Math.floor(1000 + Math.random() * 9000);
       console.log(otp);
 
       req.session.otp = otp;
 
-      const otpTimeLimit=10000
+      const otpTimeLimit = 10000;
 
-      setTimeout(()=>{
-        req.session.otp=null;
-      },otpTimeLimit)
+      setTimeout(() => {
+        req.session.otp = null;
+      }, otpTimeLimit);
 
-      res.render("enterOtp",{otpTimeLimit:10000});
+      res.render("enterOtp", { otpTimeLimit: 10000 });
     } else {
       res.send("Wrong", error);
     }
@@ -115,27 +143,24 @@ const phoneVerify = async (req, res) => {
 
 const forgotPhoneVerify = async (req, res) => {
   try {
-    const phone = req.body.ph;
-    req.session.phone = phone;
+    const phone ='+91' +req.body.ph;
+    req.session.phone=phone
 
-    const userData = await User.findOne({ phone: phone });
-    req.session.userEmail = userData.email;
-    console.log(req.session.userEmail);
+    const verification = await client.verify.v2.services(serviceSid)
+      .verifications
+      .create({
+        to: phone,
+        channel: 'sms',
+      });
 
-    if (userData) {
-      const otp = Math.floor(1000 + Math.random() * 9000);
-      console.log(otp);
+    res.redirect('/enterOtp')
 
-      req.session.otp = otp;
-
-      res.render("forgotEnterOtp");
-    } else {
-      res.send("Wrong");
-    }
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: 'An error occurred' }); // Send an error response if something goes wrong
   }
 };
+
 
 const forgotPassword = async (req, res) => {
   try {
@@ -147,29 +172,39 @@ const forgotPassword = async (req, res) => {
 
 const checkOtp = async (req, res) => {
   try {
+    const phone = req.session.phone;
+    // const userdata = await User.findOne({ phone: phone });
+    // const userEmail = userdata.email;
+    // const { otp } = req.body;
 
-    const phone=req.session.phone
-    const userdata=await User.findOne({phone:phone})
-    const userEmail=userdata.email
+    // const storedOtp = req.session.otp;
+
+    // delete req.session.otp;
+
+    // if (!otp || otp === "") {
+    //   console.log("OTP is not provided");
+    //   res.redirect("/enterOtp");
+    //   return;
+    // }
+    // if (Number(otp) === storedOtp) {
+    //   console.log("OTP verification successful");
+    //   req.session.userEmail = userEmail;
+    //   res.redirect("/home");
+    // } else {
+    //   console.log("OTP verification failed");
+    //   res.render("enterOtp", { message: "incorrect OTP" });
+    // }
     const { otp } = req.body;
+    const verifiedresponse=await client.verify.v2.services(serviceSid)
+    .verificationChecks
+    .create({
+      to: phone,
+      code:otp,
+    });
+    res.redirect('/home')
 
-    const storedOtp = req.session.otp;
 
-    delete req.session.otp;
 
-    if (!otp || otp === "") {
-      console.log("OTP is not provided");
-      res.redirect("/enterOtp");
-      return;
-    }
-    if (Number(otp) === storedOtp) {
-      console.log("OTP verification successful");
-      req.session.userEmail=userEmail
-      res.redirect("/home");
-    } else {
-      console.log("OTP verification failed");
-      res.render("enterOtp", { message: "incorrect OTP" });
-    }
   } catch (error) {
     console.log(error);
   }
@@ -178,28 +213,20 @@ const checkOtp = async (req, res) => {
 const forgotCheckOtp = async (req, res) => {
   try {
     const { otp } = req.body;
+    const verifiedresponse=await client.verify.v2.services(serviceSid)
+    .verificationChecks
+    .create({
+      to: phone,
+      code:otp,
+    });
+    res.redirect('/home')
 
-    const storedOtp = req.session.otp;
 
-    delete req.session.otp;
 
-    if (!otp || otp === "") {
-      console.log("OTP is not provided");
-      res.redirect("/enterOtp");
-      return;
-    }
-    if (Number(otp) === storedOtp) {
-      console.log("OTP verification successful");
-      res.redirect("/setNewPassword");
-    } else {
-      console.log("OTP verification failed");
-      res.render("enterOtp", { message: "incorrect OTP" });
-    }
   } catch (error) {
     console.log(error);
   }
 };
-
 
 const matchPassword = async (req, res) => {
   try {
@@ -216,6 +243,7 @@ const matchPassword = async (req, res) => {
 
         if (user) {
           user.password = fpassword;
+          
           await user.save();
         }
 
@@ -237,7 +265,9 @@ const matchPassword = async (req, res) => {
 
 const loadCart = async (req, res) => {
   try {
-    res.render("cart");
+    const userid = req.session.userid;
+    const userdata = await User.findOne({ _id: userid });
+    res.render("cart", { userdata });
   } catch (error) {
     console.log(error);
   }
@@ -251,6 +281,107 @@ const Logout = async (req, res) => {
     console.log(error);
   }
 };
+
+const loadsingleproduct = async (req, res) => {
+  try {
+    const userid = req.session.userid;
+    const userdata = User.findOne({ _id: userid });
+    const productId = req.query.id;
+    const data = await Product.find({ _id: productId });
+    // console.log(data);
+    res.render("single-product", { data, userdata });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const productsbycategory = async (req, res) => {
+  try {
+    const userid = req.session.userid;
+    const userdata = await User.findOne({ _id: userid });
+    const productCategory = req.query.category;
+    const searchQuery = req.query.search;
+    const sort=req.query.sort
+
+    let sortType={}
+
+    if(sort=='LtoH'){
+      sortType={price:1}
+    }else{
+      sortType={price:-1}
+    }
+
+    // Define the regex pattern based on the user's search prompt
+    const regex = new RegExp(searchQuery, "i"); // "i" flag for case-insensitive search
+
+    let data;
+    if(productCategory){
+       data=await Product.find({category:productCategory})
+    }else{
+       data = await Product.find({
+        $or: [
+          { name: { $regex: regex } },
+          { description: { $regex: regex } },
+        ],
+      }).sort(sortType);
+    }
+
+    const productsPerPage = 9;
+    const totalProducts = data.length;
+    const totalPages = Math.ceil(totalProducts / productsPerPage);
+    const currentPage = req.query.page ? parseInt(req.query.page) : 1;
+    const skip = (currentPage - 1) * productsPerPage;
+
+    let paginatedData;
+    if(productCategory){
+      console.log('aaaaaaa');
+       paginatedData = await Product.find({ category: productCategory })
+                                     .sort(sortType)
+                                     .skip(skip)
+                                     .limit(productsPerPage);
+    }else{
+      console.log('bbbbbbb');
+       paginatedData = await Product.find({
+                          $or: [
+                            { name: { $regex: regex } },
+                            { description: { $regex: regex } },
+                          ],
+                        })
+                        .sort(sortType)
+                        .skip(skip)
+                        .limit(productsPerPage);
+    }
+    
+
+    res.render("category-products", { data: paginatedData, userdata, totalPages, currentPage });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+const loadProfile=async(req,res)=>{
+  try{
+    const userdata=await User.findOne({_id:req.session.userid})
+
+    res.render('profile',{userdata})
+
+  }catch(error){
+    console.log(error);
+  }
+}
+
+const cancelReason=async(req,res)=>{
+  try{
+    
+
+  }catch(error){
+    console.log(error);
+  }
+}
+
+
 
 module.exports = {
   loadRegister,
@@ -267,4 +398,9 @@ module.exports = {
   matchPassword,
   loadCart,
   Logout,
+  loadsingleproduct,
+  productsbycategory,
+  loadProfile,
+  cancelReason
+
 };

@@ -1,20 +1,29 @@
+const user = require("../model/userSchema");
+
 const login = async (req, res, next) => {
+  
   try {
-    if (req.session.userisblocked == 1) {
-      res.render("login", { message: "you have no access" });
-      console.log("user have no access");
-    } else if (req.session.userisblocked == 0) {
-      console.log("user is not blocked");
-      next();
-    } else if (req.session.userEmail) {
-      next();
+    const userId = req.session.userid;
+
+    if (userId) {
+      const userinfo = await user.findOne({ _id: userId });
+      const userisblocked = userinfo.is_blocked;
+
+      if (userisblocked) {
+        console.log('user blocked');
+        return res.redirect("/login");
+      } else {
+        next();
+      }
     } else {
-      res.redirect("/");
+      console.log("User is not logged in"); 
+      res.redirect("/login");
     }
   } catch (error) {
     console.log(error);
   }
 };
+
 module.exports = {
   login,
 };

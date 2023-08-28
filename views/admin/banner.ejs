@@ -1,0 +1,130 @@
+<%-include('../layouts/admin-layout.ejs')%>
+
+<section class="content-main">
+  <div class="container">
+    <div class="card gradient-card">
+      <div class="card-body">
+    <h3>Banner Form</h3>
+    <br />
+    <form method="post" action="/admin/addbanner">
+      <div class="form-group">
+        <label for="">Banner Cover</label>
+      
+        
+        <input
+          type="file"
+          class="form-control"
+          id="exampleInputEmail1"
+          name="coverimage"
+          accept="image/*"
+        />
+        <br />
+      </div>
+      
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          id="exampleInputPassword1"
+          name="description"
+          placeholder="Enter Banner  Description"
+          
+        />
+      </div>
+      <div class="form-group">
+        <label for="bookimage">Product Image</label>
+        <input
+          type="file"
+          class="form-control"
+          id="exampleInputEmail1"
+          name="bookimage"
+          accept="image/*"
+        />
+        <br />
+      </div>
+      
+      <br />
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <div>
+        <p><%=(typeof message!=='undefined')?message:""%></p>
+      </div>
+    </form>
+      </div>
+    </div>
+  </div>
+  <!-- <style>
+ .gradient-card {
+    background: linear-gradient(to bottom right, #f9f9fb, #f4f5f6);
+    border-radius: 10px;
+    box-shadow:
+      0 2px 5px rgba(0, 0, 0, 1), /* Main shadow - gives depth */
+      0 0 0 6px #ffffff, /* Highlight - simulates light source */
+      0 0 10px rgba(0, 0, 0, 0.5) inset; /* Inner shadow - adds more depth */
+  }
+  </style> -->
+  
+    <br />
+
+       <!-- --------------DISPLAY CATEGORY----------------- -->
+  
+  
+  
+       <div class="card mb-4">
+              
+                
+        <div class="card-body">
+            <div class="table-responsive">
+                <div class="table-responsive">
+                    <table class="table align-middle table-nowrap mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                
+                                <th class="align-middle" scope="col">Banner Cover</th>
+                                <th class="align-middle" scope="col">Description</th>
+                                <th class="align-middle" scope="col">Product Image</th>
+                                <th class="align-middle" scope="col">Action</th>
+                                
+                             
+                               
+                  
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <% banner.forEach((item) => { %>
+                          
+                      
+                            <tr>
+                         
+                                <!-- image -->
+                                <td>
+                                  <img src="/images/backgrounds/<%= item.Image[0] %>" alt="image" style="height: 50px;">
+                                </div>
+                                </td>
+                                <!-- description  -->
+                                <td>
+                                  <span data-bs-toggle="tooltip" data-bs-placement="top" title="<%= item.description %>" style="display: inline-block; max-width: 300px;">
+                                    <%= item.description %>
+                                  
+                                </td>
+                                
+                                  <td>
+                                    <img src="/img/product/<%= item.productimg[0] %>" alt="image" style="max-width: 100px; height: auto">
+                                  </td>
+                               
+                                <td>
+                                 <a href="/admin/deleteBanner?proId=<%=item._id%>">Delete</a>
+                                  </td>
+                                  
+                            </tr>
+                            <% }); %>
+                           
+                        </tbody>
+                    </table>
+                </div>
+            </div> <!-- table-responsive end// -->
+      </div>
+    </div>
+  </div>
+</section>
+<%-include('../layouts/adminfooter.ejs')%>

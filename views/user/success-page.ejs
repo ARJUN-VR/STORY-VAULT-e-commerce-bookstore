@@ -1,0 +1,157 @@
+<%-include('../layouts/header.ejs')%>
+<script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
+
+
+
+
+
+!-- Start Banner Area --
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Confirmation</h1>
+					<nav class="d-flex align-items-center">
+						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="category.html">Confirmation</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+	<!--================Order Details Area =================-->
+	<section class="order_details section_gap">
+		<div class="container">
+			<div class="d-flex justify-content-between">
+			<h3 class="title_confirmation">Thank you. Your order has been received.</h3>
+			<button class="btn btn-success" style="height: 50px;" id="downloadInvoice">Download Invoice</button>
+		</div>
+			<div class="row order_d_inner">
+				<div class="col-lg-4">
+					<div class="details_item">
+						<h4>Order Info</h4>
+						<ul class="list">
+							<li><a href="#"><span>Order number</span> : 60235</a></li>
+							<li><a href="#"><span>Date</span> : Los Angeles</a></li>
+							<li><a href="#"><span>Total</span> : USD 2210</a></li>
+							<li><a href="#"><span>Payment method</span> : Check payments</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="details_item">
+						<h4>Billing Address</h4>
+						<% address.forEach((item) => { %>
+							<ul class="list">
+								<li><a href="#"><span>Street</span> : <%= item.street %></a></li>
+								<li><a href="#"><span>City</span> : <%= item.city %></a></li>
+								<li><a href="#"><span>House</span> : <%= item.house %></a></li>
+								<li><a href="#"><span>Phone</span> : <%= item.phone %></a></li>
+							</ul>
+						<% }); %>
+						
+					</div>
+				</div>
+				
+			</div>
+			<div class="order_details_table">
+				<h2>Order Details</h2>
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">Product</th>
+								<th scope="col">Quantity</th>
+								<th scope="col">subtotal</th>
+								<th scope="col">Total</th>
+
+							</tr>
+						</thead>
+						<tbody>
+							<% currentOrder.orderdetails.forEach((item) => { %>
+								<tr>
+									<td>
+										<p><%= item.carted.name %></p>
+									</td>
+									<td>
+										<h5><%= item.quantity %></h5>
+									</td>
+									<td>
+										<p>₹<%= item.carted.price %></p>
+									</td>
+								
+							<% }) %>
+							<td>₹<%=currentOrder.orderdetails[0].cartTotal%></td>
+
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<script>
+			document.getElementById('downloadInvoice').addEventListener('click', function() {
+				const address = {
+					street: '<%= address[0].street %>',
+					city: '<%= address[0].city %>',
+					house: '<%= address[0].house %>',
+					phone: '<%= address[0].phone %>'
+				};
+			
+				const items = [];
+				<% currentOrder.orderdetails.forEach((item) => { %>
+					items.push({
+						quantity: <%= item.quantity %>,
+						description: '<%= item.carted.name %>',
+						price: <%= item.carted.price %>,
+						"tax-rate": 6,
+					});
+				<% }); %>
+			
+				const data = {
+					currency: 'INR',
+					taxNotation: 'gst', // Or 'vat' if applicable
+					marginTop: 25,
+					marginRight: 25,
+					marginLeft: 25,
+					marginBottom: 25,
+					logo: 'https://your-logo-url.com/logo.png', // Replace with your logo URL
+					background: 'https://background-image-url.com/bg.png', // Replace with background image URL
+					sender: {
+						company: 'Your Company',
+						address: '123 Street, City, Country',
+						zip: '12345',
+						email: 'contact@yourcompany.com',
+						phone: '+1234567890'
+					},
+					client: {
+						company: '<%= userdata.name %>',
+						address: `${address.street}, ${address.city}, ${address.house}`,
+						zip: '00000',
+						email: '<%= userdata.email %>',
+						phone: '<%= userdata.phone %>'
+					},
+					"information": {
+        // Invoice number
+        "number": "2021.0001",
+        // Invoice data
+        "date": "12-12-2021",
+        // Invoice due date
+        "due-date": "31-12-2021"
+    },
+					products: items
+				};
+			
+				easyinvoice.createInvoice(data, function(result) {
+					easyinvoice.download('invoice.pdf');
+				});
+			});
+			</script>
+	</section>
+	<!--================End Order Details Area =================-->
+
+
+
+<%-include('../layouts/footer.ejs')%>

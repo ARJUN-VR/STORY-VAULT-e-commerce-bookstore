@@ -1,0 +1,47 @@
+<%-include('../layouts/admin-layout.ejs')%>
+
+<section class="content-main">
+  <div class="container">
+    <h3>Category Edit Form</h3>
+    <br />
+    <form method="post" action="/admin/updateCategory">
+        
+      <div class="form-group">
+        <% data.forEach(category => { %>
+        <input
+          type="text"
+          class="form-control"
+          id="exampleInputEmail1"
+          name="name"
+          aria-describedby="emailHelp"
+          placeholder="Enter Category Name"
+          pattern="^(?!.*\d)[^\s]+$"
+          required
+          value="<%= category.name%>"
+        />
+        <br />
+      </div>
+      <input type="hidden" value="<%= category._id%>" name="id">
+      
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          id="exampleInputPassword1"
+          name="description"
+          placeholder="Enter Category Description"
+          pattern="^(?=.*[a-zA-Z])(?!.*\d).+$"
+          required
+          value="<%= category.description%>"
+        />
+        <% }) %>
+      </div>
+   
+      <br />
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <div>
+        <p><%=(typeof message!=='undefined')?message:""%></p>
+      </div>
+    </form>
+    <br />
