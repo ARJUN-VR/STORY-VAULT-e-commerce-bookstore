@@ -143,12 +143,12 @@ const phoneVerify = async (req, res) => {
 
 const forgotPhoneVerify = async (req, res) => {
   try {
-    const userdata = await User.findOne({phone:req.body.ph})
+    const phone ='+91' +req.body.ph;
+    const userdata = await User.findOne({phone:phone})
     if(!userdata || userdata==null){
       console.log('no phone found');
      res.render('forgot',{message:"No user found with this phone number"})
     }else{
-      const phone ='+91' +req.body.ph;
       req.session.phone=phone
   
       const verification = await client.verify.v2.services(serviceSid)
