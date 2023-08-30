@@ -1,8 +1,8 @@
 <%-include('../layouts/header.ejs') %>
 
-
+<br><br>
  <!-- Start Banner Area -->
- <section class="banner-area organic-breadcrumb">
+ <!-- <section class="banner-area organic-breadcrumb">
   <div class="container">
       <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
           <div class="col-first">
@@ -14,7 +14,7 @@
           </div>
       </div>
   </div>
-</section>
+</section> -->
 <!-- End Banner Area -->
 
 <!--================Cart Area =================-->
@@ -46,7 +46,7 @@
                         <td>
                           <div class="media">
                             <div class="d-flex">
-                              <img src="img/product/<%= product.carted.Image[0] %>" alt="" style="height: 30%; width: 30%;">
+                              <img src="img/product/<%= product.carted.Image[0] %>" alt="" style="height: 15vh; width: 5vw;">
                             </div>
                             <div class="media-body">
                               <p><%= product.carted.name %></p>
@@ -92,7 +92,7 @@
                               <h5>Subtotal</h5>
                           </td>
                           <td>
-                              <h5>₹.<span id="Subtotal"></span></h5>
+                              <h5>₹<span id="Subtotal"><%= data[0].cartTotal %></span></h5>
                           </td>
                       </tr>
                      

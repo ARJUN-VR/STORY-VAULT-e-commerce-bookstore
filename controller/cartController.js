@@ -35,12 +35,14 @@ const loadCart = async (req, res) => {
         $project: {
           carted: 1,
           quantity: "$cartItems.quantity",
-          cartItems:1
+          cartItems:1,
+          cartTotal:1
         },
       },
     ]);
 
     res.render("cart", { data, userdata });
+    console.log(data);
   } catch (error) {
     console.log(error);
   }

@@ -2,11 +2,21 @@
 <script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
 
 
+<style>
+	
+	
+	span{
+		
+		color: white !important;
+	}
+	
+	
+
+</style>
+<br><br>
 
 
-
-!-- Start Banner Area --
-	<section class="banner-area organic-breadcrumb">
+	<!-- <section class="banner-area organic-breadcrumb">
 		<div class="container">
 			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
 				<div class="col-first">
@@ -18,7 +28,7 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</section> -->
 	<!-- End Banner Area -->
 
 	<!--================Order Details Area =================-->
@@ -31,24 +41,24 @@
 			<div class="row order_d_inner">
 				<div class="col-lg-4">
 					<div class="details_item">
-						<h4>Order Info</h4>
+						<h4 style="color: white;">Order Info</h4>
 						<ul class="list">
-							<li><a href="#"><span>Order number</span> : 60235</a></li>
-							<li><a href="#"><span>Date</span> : Los Angeles</a></li>
-							<li><a href="#"><span>Total</span> : USD 2210</a></li>
-							<li><a href="#"><span>Payment method</span> : Check payments</a></li>
+							<li ><a href="#"><span >Order number</span> <span>: 60235</span></a></li>
+							<li><a href="#"><span>Date</span> <span>: Los Angeles</span></a></li>
+							<li><a href="#"><span>Total</span> <span>: USD 2210</span></a></li>
+							<li><a href="#"><span>Payment method</span><span> : Check payments</span></a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="col-lg-4">
 					<div class="details_item">
-						<h4>Billing Address</h4>
+						<h4 style="color: white;">Billing Address</h4>
 						<% address.forEach((item) => { %>
 							<ul class="list">
-								<li><a href="#"><span>Street</span> : <%= item.street %></a></li>
-								<li><a href="#"><span>City</span> : <%= item.city %></a></li>
-								<li><a href="#"><span>House</span> : <%= item.house %></a></li>
-								<li><a href="#"><span>Phone</span> : <%= item.phone %></a></li>
+								<li ><a href="#"><span>Street</span> <span>: <%= item.street %></span></a></li>
+								<li><a href="#"><span>City</span> <span>: <%= item.city %></span></a></li>
+								<li><a href="#"><span>House</span> <span>: <%= item.house %></a></span></li>
+								<li><a href="#"><span>Phone</span> <span>: <%= item.phone %></span></a></li>
 							</ul>
 						<% }); %>
 						
@@ -61,7 +71,7 @@
 				<div class="table-responsive">
 					<table class="table">
 						<thead>
-							<tr>
+							<tr style="color: black;">
 								<th scope="col">Product</th>
 								<th scope="col">Quantity</th>
 								<th scope="col">subtotal</th>
@@ -83,7 +93,7 @@
 									</td>
 								
 							<% }) %>
-							<td>₹<%=currentOrder.orderdetails[0].cartTotal%></td>
+							<td style="color: black;">₹<%=currentOrder.orderdetails[0].cartTotal%></td>
 
 						</tr>
 						</tbody>
@@ -150,6 +160,7 @@
 			});
 			</script>
 	</section>
+
 	<!--================End Order Details Area =================-->
 
 

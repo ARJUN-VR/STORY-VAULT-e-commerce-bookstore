@@ -71,7 +71,7 @@
                         <div class="card" style="width: 48%; height: 95%;border-radius: 10px;box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);transition: transform 0.3s, box-shadow 0.3s;">
                           <a href="/checkout<%=item.id%>">
                             <div class="card-body d-block">
-                                <h4 style="color: black;" class="card-title"><%= item.name %></h4>
+                                <h4 style="color: black" class="card-title"><%= item.name %></h4>
                                 <h6>Name: <%= item.phone %></h6>
                                 <h6>Email: <%= item.email %></h6>
                                 <h6>Phone: <%= item.phone %></h6>
@@ -87,7 +87,7 @@
                  
                 
                   <div class="col-md-3 text-md-righ d-flex justify-content-start" style="width: 800px;margin-left: 44%;margin-top: 4%;">
-                    <a  type="submit"  id="view" style="color: black;font-size: medium;" >show more Address</a>
+                    <a  type="submit"  id="view" style="color: rgb(255, 255, 255);font-size: medium;" >show more Address</a>
                   </div>
                   
     
@@ -97,7 +97,11 @@
                     .card:hover {
         box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.2); /* Change the shadow on hover */
         transform: translateY(-4px); /* Add a slight lift effect on hover */
-        background-color: rgba(0, 0, 0, 0.1);
+
+        
+    }
+    h6{
+      color: black;
     }
                 </style>
                 
@@ -131,7 +135,7 @@
               
             </div>
             <a href="/checkout<%=item.id%>">
-            <h4 class="card-title"><%=item.name%></h4>
+            <h4 class="card-title" style="color: black;"><%=item.name%></h4>
               <h6><%=item.phone%></h6>
               <h6><%=item.email%></h6>
               <h6><%=item.phone%></h6>
