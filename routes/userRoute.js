@@ -92,7 +92,7 @@ userRoute.get("/enterOtp", (req, res) => {
 });
 
 userRoute.post("/check-otp", userController.checkOtp);
-userRoute.post("/forgot-check-otp", userController.forgotCheckOtp);
+// userRoute.post("/forgot-check-otp", userController.forgotCheckOtp);
 
 
 userRoute.get('/logout',userController.Logout)

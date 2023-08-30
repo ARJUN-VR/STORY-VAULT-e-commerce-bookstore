@@ -143,17 +143,24 @@ const phoneVerify = async (req, res) => {
 
 const forgotPhoneVerify = async (req, res) => {
   try {
-    const phone ='+91' +req.body.ph;
-    req.session.phone=phone
+    const userdata = await User.findOne({phone:req.body.ph})
+    if(!userdata || userdata==null){
+      console.log('no phone found');
+     res.render('forgot',{message:"No user found with this phone number"})
+    }else{
+      const phone ='+91' +req.body.ph;
+      req.session.phone=phone
+  
+      const verification = await client.verify.v2.services(serviceSid)
+        .verifications
+        .create({
+          to: phone,
+          channel: 'sms',
+        });
+  
+      res.redirect('/enterOtp')
+    }
 
-    const verification = await client.verify.v2.services(serviceSid)
-      .verifications
-      .create({
-        to: phone,
-        channel: 'sms',
-      });
-
-    res.redirect('/enterOtp')
 
   } catch (error) {
     console.log(error);
@@ -172,9 +179,9 @@ const forgotPassword = async (req, res) => {
 
 const checkOtp = async (req, res) => {
   try {
+    
     const phone = req.session.phone;
-    // const userdata = await User.findOne({ phone: phone });
-    // const userEmail = userdata.email;
+    
     // const { otp } = req.body;
 
     // const storedOtp = req.session.otp;
@@ -201,7 +208,12 @@ const checkOtp = async (req, res) => {
       to: phone,
       code:otp,
     });
-    res.redirect('/home')
+    if(verifiedresponse.status=== 'approved'){
+      res.redirect("/setNewPassword");
+    }else{
+      console.log("OTP verification failed");
+      res.render("enterOtp", { message: "incorrect OTP" });
+    }
 
 
 
@@ -212,6 +224,7 @@ const checkOtp = async (req, res) => {
 
 const forgotCheckOtp = async (req, res) => {
   try {
+    console.log('hererrerre');
     const { otp } = req.body;
     const verifiedresponse=await client.verify.v2.services(serviceSid)
     .verificationChecks
@@ -237,17 +250,17 @@ const matchPassword = async (req, res) => {
       if (password1 === password2) {
         const storedPhone = req.session.phone;
 
-        const user = await User.findOne({ phone: storedPhone });
-        console.log(user);
+        const userdata = await User.findOne({ phone: storedPhone });
+        console.log(userdata);
         const fpassword = await securePassword(password1);
 
-        if (user) {
-          user.password = fpassword;
+        if (userdata) {
+          userdata.password = fpassword;
           
-          await user.save();
+          await userdata.save();
         }
 
-        res.render("login", { message: "password changed successfully" });
+        res.render("login", { message: "password changed successfully",userdata });
       } else {
         res.render("setNewPass", { message: "passwords doesn't match" });
       }
