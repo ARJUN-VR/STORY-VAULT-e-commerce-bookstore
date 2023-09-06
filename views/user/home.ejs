@@ -241,25 +241,23 @@
             <% data.forEach(product => { %>
                 <!-- single product -->
                 <% if (product.is_listed === false) { %>
-                    <div class="col-lg-2 col-md-6 col-4 ">
+                    <div class="col-lg-2 col-md-4 col-sm-6 col-12"> <!-- Adjusted column sizes for responsiveness -->
                         <a href="/single-product?id=<%= product.id %>">
-                        <div class="single-product">
-                            <img class="img-fluid" src="img/product/<%=product.Image[0] %>" alt="product image" style="height: 30vh; width: 10vw;">
-                            <div class="product-details">
-                                <h6> <%= product.name %></h6>
-                                <div class="price">
-                                    <h6> ₹<%= product.price %></h6>
-                                    
+                            <div class="single-product">
+                                <img class="img-fluid product-image" src="img/product/<%= product.Image[0] %>" alt="product image">
+                                <div class="product-details">
+                                    <h6> <%= product.name %></h6>
+                                    <div class="price">
+                                        <h6> ₹<%= product.price %></h6>
+                                    </div>
                                 </div>
-                            </a>
-                                
                             </div>
-                        </div>
+                        </a>
                     </div>
                 <% } %>
             <% }) %>
-</div>
-
+        </div>
+        
         </div>
         </div>
         </div>
