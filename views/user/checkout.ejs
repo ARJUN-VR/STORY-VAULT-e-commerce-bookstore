@@ -287,7 +287,7 @@
 <!-- Form for Cash On Delivery -->
 <form id="orderform-cash" action="place-order" method="post">
 
-      <input type="hidden" value="<%=addresstodisplay.id%>" name="addressId">
+      <input type="hidden" value="<%= addresstodisplay && addresstodisplay.id ? addresstodisplay.id : null %>" name="addressId">
       <input type="hidden" value="cod" name="method">
 
             
@@ -300,7 +300,7 @@
 
 <form id="orderform-wallet" style="display: none;"  action="place-order" method="post">
 
-  <input type="hidden" value="<%=addresstodisplay.id%>" name="addressId">
+  <input type="hidden" value="<%= addresstodisplay && addresstodisplay.id ? addresstodisplay.id : null %>"  name="addressId">
   <input type="hidden" value="wallet" name="method">
         
 
@@ -312,7 +312,7 @@
 
 <!-- Form for PayPal -->
 <form id="orderform-paypal" style="display: none; " action="/paypal" method="post">
-  <input type="hidden" value="<%=addresstodisplay.id%>" name="addressId">
+  <input type="hidden" value="<%= addresstodisplay && addresstodisplay.id ? addresstodisplay.id : null %>"  name="addressId">
   <input type="hidden" value="paypal" name="method">
 
  <div>

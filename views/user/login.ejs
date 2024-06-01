@@ -18,7 +18,7 @@
 <!-- End Banner Area -->
 
 <!--================Login Box Area =================-->
-<%=(typeof message!=='undefined') ? message : ""%>
+
 
 <section class="login_box_area section_gap">
   <div class="container">
@@ -88,6 +88,7 @@
             </div>
             <div class="col-md-12 form-group">
               <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+              <%=(typeof message!=='undefined') ? message : ""%>
             </div>
             <input type="checkbox" id="showPasswordCheckbox">
             <label for="showPasswordCheckbox">Show Password</label>

@@ -79,12 +79,15 @@ const verify = async (req, res) => {
     if (userdata) {
       const passwordMatch = await bcrypt.compare(password, userdata.password);
       if (passwordMatch) {
+        console.log("login successfull");
         req.session.userid = userdata._id;
         res.redirect("/");
       } else {
-        res.render("login", { message: "incorrect password" });
+        console.log("login failed");
+        res.render("login", { message: "incorrect password",userdata: null });
       }
     } else {
+      console.log('no email')
       res.render("login", { message: "incorrect email" });
     }
   } catch (error) {
@@ -347,13 +350,13 @@ const productsbycategory = async (req, res) => {
 
     let paginatedData;
     if(productCategory){
-      console.log('aaaaaaa');
+      
        paginatedData = await Product.find({ category: productCategory })
                                      .sort(sortType)
                                      .skip(skip)
                                      .limit(productsPerPage);
     }else{
-      console.log('bbbbbbb');
+    
        paginatedData = await Product.find({
                           $or: [
                             { name: { $regex: regex } },

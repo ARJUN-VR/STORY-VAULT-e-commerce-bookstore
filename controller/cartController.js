@@ -160,6 +160,7 @@ const loadCheckout = async (req, res) => {
     const userid = req.session.userid;
  
     const userdata = await User.findOne({ _id: userid });
+    console.log('userData:',userdata)
 
     const address=userdata.address
     console.log('this is a address '+address);
@@ -217,6 +218,7 @@ const loadCheckout = async (req, res) => {
       });
     }
  
+    console.log("addresstodisplay:",addresstodisplay)
 
     res.render("checkout", { userdata, data, subtotal,address,addresstodisplay });
   } catch (error) {
